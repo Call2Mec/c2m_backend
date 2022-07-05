@@ -10,7 +10,7 @@ mongoose
   .connect(DB_URI)
   .then(() => {
     console.log("database connected");
-    app.listen(PORT, () => {
+    app.listen(process.env.PORT || 8080 , () => {
       console.log(`Server is up and running on Port : ${PORT}`);
     });
   })
