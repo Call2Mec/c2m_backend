@@ -41,7 +41,7 @@ class Email {
     //2) define  email options
     const mailOptions = {
       from: this.from,
-      to: "md.hasibuzzaman28@gmail.com",
+      to: this.to,
       subject,
       text,
     };
