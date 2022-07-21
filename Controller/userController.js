@@ -65,17 +65,15 @@ export const otpEmailSend = async (req, res) => {
 const mailer = (email, otp) => {
   let transporter = nodemailer.createTransport({
     service: "gmail",
-    port: 587,
-    secure: false,
     auth: {
-      user: "email.ney.vai@gmail.com",
-      pass: "email@420",
+      user: process.env.GMAIL,
+      pass: process.env.APP_GMAIL_PASS,
     },
   });
   const mail = {
-    from: "'C2M' <email.ney.vai@gmail.com>",
+    from: `"Aryan Sharma" <${process.env.EMAIL_FROM}>`,
     to: email,
-    subject: "Otp for passward change",
+    subject: "OTP from Call2mechanic",
 
     text: `Here is your otp: ${otp}`,
   };

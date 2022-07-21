@@ -7,17 +7,10 @@ import express from "express";
 import path from "path";
 // import wbm from "wbm";
 
-const { google } = require("googleapis");
 const app = express();
 const __dirname = path.resolve();
 app.use("/public", express.static(path.join(__dirname, "public")));
-// Md added oAuth2 Credentials----
-const oAuth2Client = new google.auth.OAuth2(
-  process.env.CLIENT_ID,
-  process.env.CLIENT_SECRET,
-  process.env.REDIRECT_URI
-);
-oAuth2Client.setCredentials({ refresh_token: process.env.REFRESH_TOKEN });
+
 class Email {
   constructor(email) {
     this.to = email;
@@ -30,22 +23,10 @@ class Email {
         service: "gmail",
         auth: {
           user: process.env.GMAIL,
-          pass: process.env.GMAIL_PASS,
+          pass: process.env.APP_GMAIL_PASS,
         },
       });
     }
-    // return nodemailer.createTransport({
-    //   service: "gmail",
-    //   auth: {
-    //     type: "OAuth2",
-    //     user: process.env.GMAIL,
-    //     clientId: process.env.CLIENT_ID,
-    //     clientSecret: process.env.CLIENT_SECRET,
-    //     refreshToken: process.env.REFRESH_TOKEN,
-    //     accessToken: oAuth2Client,
-    //   },
-    // });
-
     return nodemailer.createTransport({
       host: process.env.EMAIL_HOSTDEV,
 
@@ -55,67 +36,17 @@ class Email {
         pass: process.env.EMAIL_PASSWORDDEV,
       },
     });
-    
   }
-
-  async send(text, subject, file, phone) {
+  async send(text, subject) {
     //2) define  email options
-    /*if (subject === "your Estimate") {
-      const mailOptions = {
-        from: this.from,
-        to: this.to,
-        subject,
-        text,
-        attachments: [
-          {
-            filename: "Estimate.pdf",
-            path: path.join(__dirname, "utils", "Estimate.pdf"),
-            //   content: new buffer.from(file, "base64"),
-            //   contentType: "application/pdf",
-            //   content: 'THISISAB64STRING',
-            //   encoding: 'base64',
-          },
-        ],
-      };
-    } else {
-      const mailOptions = {
-        from: this.from,
-        to: this.to,
-        subject,
-        text,
-      };
-    }*/
     const mailOptions = {
       from: this.from,
-      to: this.to,
+      to: "md.hasibuzzaman28@gmail.com",
       subject,
       text,
-      attachments: [
-        {
-          filename: "Estimate.pdf",
-          path: path.join(__dirname, "utils", "Estimate.pdf"),
-          //   content: new buffer.from(file, "base64"),
-          //   contentType: "application/pdf",
-          //   content: 'THISISAB64STRING',
-          //   encoding: 'base64',
-        },
-      ],
     };
-
     //3) create an transport and send email
-
     await this.newTransport().sendMail(mailOptions);
-    // WhatsApp message
-
-    // wbm
-    //   .start()
-    //   .then(async () => {
-    //     const phones = [phone];
-    //     const message = text;
-    //     await wbm.send(phones, message);
-    //     await wbm.end();
-    //   })
-    //   .catch((err) => console.log(err));
   }
 
   async sendResetToken(message) {
